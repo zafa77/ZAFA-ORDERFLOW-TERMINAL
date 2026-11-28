@@ -3,8 +3,8 @@ import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const pages=['index.html','terminal.html','liquidity.html','academy.html','privacy.html','terms.html'];
-const scripts=['terminal.js','liquidity-app.js','academy-app.js','privacy.js','home.js','chart-link.js','market-data.js'];
+const pages=['index.html','terminal.html','liquidity.html','academy.html','privacy.html','terms.html','community.html','calendar.html'];
+const scripts=['terminal.js','liquidity-app.js','academy-app.js','privacy.js','home.js','calendar.js','chart-link.js','market-data.js'];
 const assets=[...pages,...scripts,'_headers'];
 const secretPatterns=[
  /sb_secret_[a-zA-Z0-9_-]{20,}/,
