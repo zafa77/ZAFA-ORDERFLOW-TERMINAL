@@ -1,0 +1,19 @@
+# Credentials / local development only
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+client_secret*.json
+service-account*.json
+secrets/
+.supabase/
+supabase/.temp/
+supabase/.branches/
+.wrangler/
+node_modules/
+dist/
+*.log
