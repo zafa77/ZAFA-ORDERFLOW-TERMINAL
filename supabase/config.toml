@@ -1,0 +1,6 @@
+# Merge into the project configuration if an existing Supabase config is in use.
+project_id = "zafa"
+[functions.account-rights]
+# The handler performs server-side getUser + database session validation.
+# Required to support modern Supabase keys without the legacy JWT gateway check.
+verify_jwt = false
