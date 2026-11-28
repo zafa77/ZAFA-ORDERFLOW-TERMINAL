@@ -136,3 +136,10 @@ No production accounts until a real operator/privacy contact, provider accounts,
 DPA/transfer assessment, RLS + endpoint tests, actual browser checks, auth UI and
 rights workflows, retention, recovery and legal review are complete. No credentials
 in any public artifact. This runbook is a technical readiness package, not legal certification.
+
+
+## Native Community feedback — preview activation
+- community.html uses two native private forms, with one public Formspree form ID in community.js; empty by default. No recipient email or API secret in repository. The public ID is not a credential.
+- Create a form at https://formspree.io/ and verify the target inbox. Enable domain restriction and provider spam filtering; test real browser submissions on the actual allowed origin. The free plan is for testing/development, with 50 monthly submissions as of 2026-11-28. Confirm terms and limits before public commercial deployment. Do not enable billing automatically.
+- Complete the operator/contact, legal basis, retention and deletion process (provider archive and email copies), data processing agreement and transfer safeguards; update the feedback privacy section to reflect the actual setup before enabling FORM_ID. The optional email is for replies only. Client validation/honeypot are supplemental and not a server-side security boundary.
+- Copy only the form ID (not the recipient address or password) into community.js; confirm actual success/error and inbox delivery, spam controls and quota handling. No public forum posting or automatic forwarding to GitHub. Keep feedback disabled until verified.
