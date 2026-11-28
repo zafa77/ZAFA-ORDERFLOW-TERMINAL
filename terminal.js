@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),TICK=5;let BASE=0;
 let bars=[],trades=[],tradeCursor=0,cursor=0,period=1,symbol='BTCUSDT',selected=null;
 let replaySession=null;
-const THEME_DEFAULT={"bg":"#0b1526","axis":"#101a28","text":"#91a4ba","hgrid":"#1b2b41","vgrid":"#14202e","up":"#22c55e","down":"#ff5267","upWick":"#22c55e","downWick":"#ff5267","upBorder":"#22c55e","downBorder":"#ff5267","price":"#d4ad5f","priceText":"#101722","watermark":"#20324b","showH":true,"showV":true,"shadeRows":true,"showWicks":true,"showBorders":false,"showWatermark":true,"showPrice":true};let chartTheme={...THEME_DEFAULT};
+const THEME_DEFAULT={"bg":"#080f19","axis":"#101d2c","text":"#a9b5c3","hgrid":"#263648","vgrid":"#172536","up":"#22c55e","down":"#ff5267","upWick":"#22c55e","downWick":"#ff5267","upBorder":"#22c55e","downBorder":"#ff5267","price":"#e5bc77","priceText":"#101722","watermark":"#26394d","showH":true,"showV":true,"shadeRows":true,"showWicks":true,"showBorders":false,"showWatermark":true,"showPrice":true};let chartTheme={...THEME_DEFAULT};
 function validTheme(raw){const out={...THEME_DEFAULT};for(const [k,v]of Object.entries(THEME_DEFAULT)){const x=raw?.[k];if(typeof v==='boolean'&&typeof x==='boolean')out[k]=x;else if(typeof v==='string'&&typeof x==='string'&&/^#[a-f0-9]{6}$/i.test(x))out[k]=x}return out}
 try{chartTheme=validTheme(JSON.parse(localStorage.getItem('zafa-chart-appearance-v1')||'{}'))}catch{}
 const MARKETS=['BTCUSDT','xyz:XYZ100','xyz:SP500','xyz:GOLD'],isHL=()=>symbol!=='BTCUSDT',baseUnit=()=>isHL()?'units':'BTC',quoteUnit=()=>isHL()?'USDC':'USDT',venueName=()=>isHL()?'HYPERLIQUID HIP-3':'BINANCE FUTURES';
