@@ -1,0 +1,15 @@
+/* ZAFA Market Data Engine v1. Quote prices and base quantities; no synthetic orders. */
+(function(){
+'use strict';
+const positive=x=>Number.isFinite(x)&&x>0;
+const timestamp=x=>Number.isSafeInteger(x)&&x>0;
+function trade(input){const p=Number(input?.price),q=Number(input?.quantity),t=Number(input?.time),id=String(input?.id??''),side=input?.side;if(!positive(p)||!positive(q)||!timestamp(t)||!id||!['buy','sell'].includes(side))return null;return {id,t,p,q,side,venue:String(input.venue??''),market:String(input.market??''),kind:'TRADE'}}
+function candle(input){const t=Number(input?.time),end=Number(input?.end),o=Number(input?.open),h=Number(input?.high),l=Number(input?.low),c=Number(input?.close),v=Number(input?.volume);if(!timestamp(t)||!timestamp(end)||end<t||![o,h,l,c].every(positive)||h<Math.max(o,c)||l>Math.min(o,c)||!Number.isFinite(v)||v<0)return null;return {t,end,o,h,l,c,v,kind:'OHLCV'}}
+function sideRows(rows,descending,limit){if(!Array.isArray(rows))return null;const m=new Map();for(const x of rows){const p=Number(Array.isArray(x)?x[0]:x?.px),q=Number(Array.isArray(x)?x[1]:x?.sz);if(!positive(p)||!Number.isFinite(q)||q<0||m.has(p))return null;if(q>0)m.set(p,q)}return [...m].sort((a,b)=>descending?b[0]-a[0]:a[0]-b[0]).slice(0,limit)}
+function book(input){const t=Number(input?.time),limit=Math.max(1,Math.min(5000,Number(input?.limit)||5000)),bids=sideRows(input?.bids,true,limit),asks=sideRows(input?.asks,false,limit);if(!timestamp(t)||!bids?.length||!asks?.length||bids[0][0]>=asks[0][0])return null;return {kind:'MBP',t,market:String(input.market??''),venue:String(input.venue??''),bids,asks,depth:{bid:bids.length,ask:asks.length},sequence:input.sequence??null,sequenceVerified:input.sequenceVerified===true}}
+function mbp(b,n=10){if(!b)return null;return {...b,bids:b.bids.slice(0,n),asks:b.asks.slice(0,n),depth:{bid:Math.min(n,b.bids.length),ask:Math.min(n,b.asks.length)}}}
+function bbo(b){if(!b?.bids?.length||!b?.asks?.length)return null;return {kind:'MBP-1',t:b.t,bid:b.bids[0][0],bidSize:b.bids[0][1],ask:b.asks[0][0],askSize:b.asks[0][1],spread:b.asks[0][0]-b.bids[0][0]}}
+function groupBook(b,step,scale=1){if(!b||!positive(step)||!positive(scale))return new Map();const m=new Map();for(const [rows,key]of [[b.bids,'buy'],[b.asks,'sell']])for(const [p,q]of rows){const k=Number((Math.floor(p/step+1e-8)*step/scale).toPrecision(14)),v=m.get(k)||{buy:0,sell:0};v[key]+=q;m.set(k,v)}return m}
+function profile(venue){const hyper=String(venue).startsWith('xyz:'),known=hyper||['binance','bybit','okx'].includes(venue);return {venue:hyper?'Hyperliquid HIP-3':venue,ohlcv:hyper||venue==='binance'?'exchange candles available':'not requested by map',trades:known?'public executions':'unavailable',mbp:hyper?'snapshot: up to 20 levels per side':known?'aggregated public order book':'unavailable',sequence:hyper?'snapshot timestamps, not order-event sequence':known?'venue-specific synchronization':'unavailable',mbo:false,l4:false}}
+window.ZafaMarketData={trade,candle,book,mbp,bbo,groupBook,profile};
+})();
